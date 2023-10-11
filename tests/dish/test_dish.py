@@ -5,21 +5,23 @@ from src.models.ingredient import Ingredient
 
 # Req 2
 def test_dish():
-    with pytest.raises(ValueError):
-        Dish('lasanha', -1)
-    with pytest.raises(TypeError):
-        Dish('lasanha', '15.00')
+    teste = Dish('lasanha', 15.99)
 
-    teste = Dish('lasanha', 15.00)
-    assert teste == Dish('lasanha', 15.00)
-    assert teste.__repr__() == "Dish('lasanha', R$15.00)"
-    assert teste.__hash__() == teste.__hash__()
-    assert teste.__hash__() != hash(Dish('lasanha', 0.00))
+    assert teste == Dish('lasanha', 15.99)
+    assert teste.__repr__() == "Dish('lasanha', R$15.99)"
+    assert teste.__hash__() == hash(Dish('lasanha', 15.99))
+    assert teste.__hash__() != hash(Dish('lasanha', 5.99))
     assert teste.name == 'lasanha'
+    assert teste.price == 15.99
     assert teste.recipe == {}
 
-    ingredient_test = Ingredient('camarão')
-    teste.add_ingredient_dependency(ingredient_test, 1)
+    with pytest.raises(ValueError):
+        Dish('lasanha', -15.99)
+    with pytest.raises(TypeError):
+        Dish('lasanha', '15.99')
+
+    ingredient_test = Ingredient('massa de lasanha')
+    teste.add_ingredient_dependency(ingredient_test, 5)
     assert teste.get_restrictions()
     assert teste.get_ingredients()
-    assert teste.recipe == {ingredient_test: 1}
+    assert teste.recipe == {ingredient_test: 5}
